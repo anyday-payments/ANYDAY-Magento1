@@ -1,0 +1,8 @@
+<?php
+/**
+ * @var $this Anyday_Payment_Block_Settings_Abstractsettings
+ */
+?>
+<script type="module">
+    window.adpayment = <?php echo $this->getSettingsPaymentJson() ? $this->getSettingsPaymentJson() : ''; ?>
+</script>

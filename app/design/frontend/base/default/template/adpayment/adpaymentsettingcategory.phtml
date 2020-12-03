@@ -1,0 +1,25 @@
+<?php
+/**
+ * @var $this Anyday_Payment_Block_Settings_Abstractsettings
+ */
+?>
+<script type="text/javascript">
+    <?php $jsonstring = $this->getSettingsPayment(); ?>
+    <?php if ($jsonstring): ?>
+        window.adpayment = <?php echo $jsonstring; ?>;
+        jQuery( document ).ready(function() {
+            if (window.adpayment) {
+                jQuery.ajax(
+                    {
+                        url: window.adpayment.script,
+                        dataType: "script",
+                        async: true,
+                        success: function () {
+                            console.log('Script Load');
+                        }
+                    }
+                )
+            }
+        });
+    <?php endif; ?>
+</script>

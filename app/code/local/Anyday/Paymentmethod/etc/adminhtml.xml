@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+        <system>
+            <children>
+                <adpaymentmethod translate="title">
+                    <title>Create</title>
+                    <children>
+                        <token translate="title" module="adpaymentmethod">
+                            <title>Create</title>
+                            <action>adminhtml/token/create</action>
+                            <sort_order>10</sort_order>
+                        </token>
+                    </children>
+                </adpaymentmethod>
+            </children>
+        </system>
+    </menu>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <adpaymentmethod module="adpaymentmethod">
+                                <children>
+                                    <token translate="title">
+                                        <title>Token</title>
+                                        <sort_order>10</sort_order>
+                                        <children>
+                                            <create translate="title">
+                                                <title>Create</title>
+                                                <sort_order>10</sort_order>
+                                            </create>
+                                        </children>
+                                    </token>
+                                </children>
+                            </adpaymentmethod>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

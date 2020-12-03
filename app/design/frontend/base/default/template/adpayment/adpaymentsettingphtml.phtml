@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var $this Anyday_Payment_Block_Settings_Abstractsettings
+ */
+
+if ($this->isEnableBlock()):
+    $settings = $this->getSettingsPayment();
+    if (isset($settings['currency']) && isset($settings['tagcode']) && isset($settings['priceproduct'])): ?>
+        <div class="adtag-info" style="<?php echo isset($settings['inlinecss']) ? $settings['inlinecss'] : ''; ?>">
+            <anyday-price-tag style="display: block;"
+                              total-price="<?php echo $settings['priceproduct']; ?>"
+                              price-tag-token="<?php echo $settings['tagcode']; ?>"
+                              currency="<?php echo $settings['currency']; ?>" environment="production">
+                <?php if ($settings['fullprice']) : ?>
+                    <?php echo $settings['priceproduct']; ?>
+                <?php endif; ?>
+            </anyday-price-tag>
+        </div>
+        <script>
+            jQuery( document ).ready(function() {
+                if (window.adpayment) {
+                    if (parseInt(window.adpayment.position) > 0 &&  window.adpayment.tagposition) {
+                        let jQuerySelect = '';
+                        let tag = jQuery('anyday-price-tag');
+                        if (tag.length) {
+                            tag.remove();
+                        }
+                        switch (window.adpayment.position) {
+                            case '1':
+                                jQuerySelect = window.adpayment.tagposition;
+                                break;
+                            case '2':
+                                jQuerySelect = '#' + window.adpayment.tagposition;
+                                break;
+                            case '3':
+                                jQuerySelect = '.' + window.adpayment.tagposition;
+                                break;
+                        }
+                        if (jQuerySelect) {
+                            jQuery('<div class="adtag-info" style="' + window.adpayment.inlinecss +  '">\n' +
+                                '                        <anyday-price-tag style="display: block;" base-price="'+ window.adpayment.priceproduct +'" total-price="' + window.adpayment.priceproduct + '"\n' +
+                                '                                          price-tag-token="' + window.adpayment.tagcode + '"\n' +
+                                '                                          currency="' + window.adpayment.currency + '" environment="production">' +
+                                '                        </anyday-price-tag>\n' +
+                                '                    </div>'
+                            ).insertAfter(jQuerySelect);
+                        }
+                    }
+                    jQuery.ajax(
+                        {
+                            url: window.adpayment.script,
+                            dataType: "script",
+                            async: true,
+                            success: function () {
+                                console.log('Script Load');
+                            }
+                        }
+                    )
+                }
+            });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

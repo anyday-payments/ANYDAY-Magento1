@@ -1,0 +1,58 @@
+<?xml version="1.0" ?>
+<config>
+    <modules>
+        <Anyday_Payment>
+            <version>0.0.1</version>
+        </Anyday_Payment>
+    </modules>
+    <global>
+        <helpers>
+            <adpayment>
+                <class>Anyday_Payment_Helper</class>
+            </adpayment>
+        </helpers>
+        <models>
+            <adpayment>
+                <class>Anyday_Payment_Model</class>
+            </adpayment>
+        </models>
+        <blocks>
+            <adpayment>
+                <class>Anyday_Payment_Block</class>
+            </adpayment>
+        </blocks>
+    </global>
+    <frontend>
+        <layout>
+            <updates>
+                <adpayment>
+                    <file>adpayment/adpayment.xml</file>
+                </adpayment>
+            </updates>
+        </layout>
+    </frontend>
+    <adminhtml>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <adpayment_options>
+                                            <title>Custom Configuration Section</title>
+                                        </adpayment_options>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+</config>

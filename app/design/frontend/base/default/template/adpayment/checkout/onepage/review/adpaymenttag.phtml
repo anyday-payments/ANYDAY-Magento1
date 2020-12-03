@@ -1,0 +1,15 @@
+<?php
+/**
+ * @var $this Anyday_Payment_Block_Settings_Checkout
+ */?>
+<?php if ($this->isEnableBlock()): ?>
+    <?php $settings = json_decode($this->getSettingsPayment()); ?>
+    <div class="extra-info">
+        <anyday-price-tag style="display: block; <?php echo isset($settings['inlinecss']) ? $settings['inlinecss'] : ''; ?>"
+                          total-price="<?php echo $settings->priceproduct; ?>"
+                          price-tag-token="<?php echo $settings->tagcode; ?>"
+                          currency="<?php echo $settings->currency; ?>" environment="staging">
+            <?php echo $settings->priceproduct; ?>
+        </anyday-price-tag>
+    </div>
+<?php endif; ?>

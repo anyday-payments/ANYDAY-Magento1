@@ -1,0 +1,120 @@
+<?php
+/**
+* @var $this Anyday_Paymentmethod_Block_Adminhtml_Config
+ */ ?>
+<?php
+$storeId = Mage_Core_Model_App::ADMIN_STORE_ID;
+$websiteId = -1;
+$storeCode = (string)Mage::getSingleton('adminhtml/config_data')->getStore();
+$websiteCode = (string)Mage::getSingleton('adminhtml/config_data')->getWebsite();
+if ('' !== $storeCode) { // store level
+    try {
+        $storeId = Mage::getModel('core/store')->load( $storeCode )->getId();
+    } catch (Exception $ex) {  }
+} elseif ('' !== $websiteCode) {
+    try {
+        $websiteId = Mage::getModel('core/website')->load( $websiteCode )->getId();
+    } catch (Exception $ex) {  }
+}
+?>
+<script>
+    jQuery( document ).ready(function() {
+        // jQuery('#row_payment_adpaymentmethod_tokensandbox').css('display','none');
+        // jQuery('#row_payment_adpaymentmethod_tokenlive').css('display','none');
+        pasteInfoAndButton();
+        hideAll();
+        buttonClick();
+        changeModeState();
+    });
+
+    function buttonClick() {
+        jQuery('body').delegate('#payment_adpaymentmethod_email', 'click', viewButton);
+        jQuery('body').delegate('#payment_adpaymentmethod_password', 'click', viewButton);
+        jQuery('body').delegate('.button', 'click', sendButton);
+        jQuery('body').delegate('#payment_adpaymentmethod_select_type_sandbox', 'change', changeModeState);
+    }
+
+    function changeModeState() {
+        let comment = jQuery('fieldset#payment_adpaymentmethod div.comment');
+        if (jQuery('#payment_adpaymentmethod_select_type_sandbox').val() == '1') {
+            comment.css('display','none');
+        } else {
+            comment.css('display','block');
+        }
+    }
+
+    function sendButton() {
+        var saveUrl = '<?php echo $this->getUrl('adminhtml/token/create'); ?>' + '?isAjax=true';
+        var store = <?php ?>
+
+        jQuery.ajax({
+            showLoader: true,
+            url: saveUrl,
+            data: {form_key: window.FORM_KEY,email: jQuery('#payment_adpaymentmethod_email').val(),
+                pass: jQuery('#payment_adpaymentmethod_password').val(),store: <?php echo $storeId ?>,website: <?php echo $websiteId; ?>},
+            type: 'POST',
+            dataType: 'json',
+            beforeSend: function () {
+                jQuery('#loader').show();
+            },
+            success: function(data) {
+                if(data.code == 'ok') {
+                    jQuery('.message').css('display','none');
+                    jQuery('#payment_adpaymentmethod_tokensandbox').attr('disabled',false);;
+                    jQuery('#payment_adpaymentmethod_tokensandbox').val(data.sandbox);
+                    jQuery('#payment_adpaymentmethod_tokenlive').attr('disabled',false);
+                    jQuery('#payment_adpaymentmethod_tokenlive').val(data.live);
+                    viewAll();
+                }else{
+                    jQuery('.message').html(data.result);
+                };
+                jQuery('.button').css('display','none');
+            },
+            error: function(data) {
+                console.log('ERROR: ', data);
+            },
+        });
+    }
+
+    function viewButton() {
+        jQuery('.button').css('display','block');
+    }
+
+    function pasteInfoAndButton() {
+        if (true) {
+            jQuery('<td><div class="message">Please write email and password</div></td>' +
+                '<td><div class="button" style="display: none;float: right;margin-right: 25px"><button class="sendButton" type="button">Send</button></div></td>')
+                .insertAfter('#row_payment_adpaymentmethod_password');
+        }
+    }
+
+    function hideAll() {
+        if (!jQuery('#payment_adpaymentmethod_tokensandbox').val()) {
+            jQuery('fieldset[id=payment_adpaymentmethod] tbody tr').each(function (index,item) {
+                switch (jQuery(item).attr('id')) {
+                    case 'row_payment_adpaymentmethod_title':
+                    case 'row_payment_adpaymentmethod_active':
+                    case 'row_payment_adpaymentmethod_order_status':
+                    case 'row_payment_adpaymentmethod_allowspecific':
+                    case 'row_payment_adpaymentmethod_specificcountry':
+                        jQuery('#' + jQuery(item).attr('id').replace('row_','')).prop( "disabled", true );
+                }
+            });
+        }
+    }
+
+    function viewAll() {
+        if (jQuery('#payment_adpaymentmethod_tokensandbox').val()) {
+            jQuery('fieldset[id=payment_adpaymentmethod] tbody tr').each(function (index,item) {
+                switch (jQuery(item).attr('id')) {
+                    case 'row_payment_adpaymentmethod_title':
+                    case 'row_payment_adpaymentmethod_active':
+                    case 'row_payment_adpaymentmethod_order_status':
+                    case 'row_payment_adpaymentmethod_allowspecific':
+                    case 'row_payment_adpaymentmethod_specificcountry':
+                        jQuery('#' + jQuery(item).attr('id').replace('row_','')).prop( "disabled", false );
+                }
+            });
+        }
+    }
+</script>
