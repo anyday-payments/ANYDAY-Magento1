@@ -30,7 +30,7 @@
                             <sort_order>1</sort_order>
                         </password>
                         <tokensandbox translate="label">
-                            <label>Live token</label>
+                            <label>Test API Key</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
@@ -38,7 +38,7 @@
                             <sort_order>1</sort_order>
                         </tokensandbox>
                         <tokenlive translate="label">
-                            <label>Test token</label>
+                            <label>Live API Key</label>
                             <frontend_type>text</frontend_type>
                             <show_in_default>1</show_in_default>
                             <show_in_website>1</show_in_website>
