@@ -34,6 +34,26 @@
                                             </create>
                                         </children>
                                     </token>
+                                    <invoice_capture translate="title">
+                                        <title>Invoice Capture</title>
+                                        <children>
+                                            <children>
+                                                <createonline translate="title">
+                                                    <title>Create Online</title>
+                                                    <sort_order>5</sort_order>
+                                                </createonline>
+                                                <createoffline translate="title">
+                                                    <title>Create Offline</title>
+                                                    <sort_order>10</sort_order>
+                                                </createoffline>
+                                                <test translate="title">
+                                                    <title>Create Offline</title>
+                                                    <sort_order>20</sort_order>
+                                                </test>
+                                            </children>
+                                        </children>
+                                        <sort_order>70</sort_order>
+                                    </invoice_capture>
                                 </children>
                             </adpaymentmethod>
                         </children>

@@ -1,0 +1,20 @@
+<?php
+/**
+ * @var $this Anyday_Paymentmethod_Block_Checkout_Grandtotal
+ * @see Anyday_Paymentmethod_Block_Checkout_Grandtotal
+ */
+?>
+<?php $typeBlock = Mage::app()->getRequest()->getControllerName() == 'cart' ? 'adpayment/settings_cart' : 'adpayment/settings_checkout'; ?>
+<?php $anyDayBlock =  $this->getLayout()
+    ->createBlock($typeBlock,'adpaymentsettingcheckout')
+    ->setTemplate('adpayment/adpaymentsettingphtml.phtml')
+    ->toHtml(); ?>
+<?php if ($anyDayBlock): ?>
+    <tr class="tr-anyday">
+        <td style="<?php echo $this->getStyle() ?>" class="a-right" colspan="2">
+            <strong>
+                <?php echo $anyDayBlock; ?>
+            </strong>
+        </td>
+    </tr>
+<?php endif; ?>

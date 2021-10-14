@@ -61,18 +61,6 @@ class Anyday_Paymentmethod_IndexController extends Mage_Core_Controller_Front_Ac
                 $payment = $order->getPayment();
                 if ($adOptions = $session->getAdOptins()) {
                     $payment->setTransactionId($adOptions[Anyday_Paymentmethod_Model_Paymentmethod::NAME_TRANSACTION]);
-                    $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH,
-                        null,
-                        false,
-                        'Anyday transaction');
-                    $transaction->setAdditionalInformation(Mage_Sales_Model_Order_Payment_Transaction::RAW_DETAILS,
-                        array('Context'=>'Payment',
-                            'Amount'=>$order->getGrandTotal(),
-                            'Status'=>0,
-                        ));
-                    $transaction->setIsTransactionClosed(false);
-                    $transaction->save();
-                    $payment->setTransactionId($adOptions[Anyday_Paymentmethod_Model_Paymentmethod::NAME_TRANSACTION] . '/order');
                     $transaction = $payment->addTransaction(Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER,
                         null,
                         false,
@@ -84,6 +72,7 @@ class Anyday_Paymentmethod_IndexController extends Mage_Core_Controller_Front_Ac
                         ));
                     $transaction->setIsTransactionClosed(false);
                     $transaction->save();
+                    $order->addStatusHistoryComment(Mage::helper('adpaymentmethod')->__('Amount %s has been successfully authorized.', $order->getGrandTotal()));
                     $order->save();
                 }
                 $this->helperAnyday->addStatusAfterPayment($order);

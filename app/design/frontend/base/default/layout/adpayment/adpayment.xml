@@ -8,54 +8,16 @@
         </reference>
     </default>
 
-    <catalog_category_default translate="label">
-        <reference name="content">
-            <reference name="category.products">
-                <reference name="product_list">
-                    <action method="setTemplate">
-                        <template>adpayment/catalog/product/list.phtml</template>
-                    </action>
-                </reference>
-            </reference>
-        </reference>
-    </catalog_category_default>
-
-    <catalog_category_layered translate="label">
-        <reference name="content">
-            <reference name="category.products">
-                <reference name="product_list">
-                    <action method="setTemplate">
-                        <template>adpayment/catalog/product/list.phtml</template>
-                    </action>
-                </reference>
-            </reference>
-        </reference>
-    </catalog_category_layered>
-
     <checkout_cart_index>
         <reference name="after_body_start">
             <remove name="adpaymentsettingcustom" />
             <block type="adpayment/settings_cart" name="adpaymentsetting" template="adpayment/adpaymentsetting.phtml" />
-        </reference>
-        <reference name="content">
-            <reference name="checkout.cart">
-                <reference name="checkout.cart.totals">
-                    <action method="setTemplate">
-                        <template>adpayment/checkout/cart/totals.phtml</template>
-                    </action>
-                    <block type="adpayment/settings_cart" name="adpaymentsettingphtml" template="adpayment/adpaymentsettingphtml.phtml" />
-                </reference>
-            </reference>
         </reference>
     </checkout_cart_index>
 
     <catalog_product_view>
         <reference name="head">
             <action method="addJs"><script>adpayment/product_options.js</script></action>
-            <action method="removeItem">
-                <type>js</type>
-                <name>varien/product_options.js</name>
-            </action>
         </reference>
         <reference name="after_body_start">
             <remove name="adpaymentsettingcustom" />
@@ -63,10 +25,9 @@
         </reference>
         <reference name="content">
             <reference name="product.info">
-                <action method="setTemplate">
-                    <template>adpayment/catalog/product/view.phtml</template>
-                </action>
-                <block type="adpayment/settings_product" name="adpaymentsettingphtml" template="adpayment/adpaymentsettingphtml.phtml" />
+                <reference name="product.info.addtocart">
+                    <block type="adpayment/settings_product" name="adpaymentsettingphtml" template="adpayment/adpaymentsettingphtml.phtml" />
+                </reference>
             </reference>
         </reference>
     </catalog_product_view>
@@ -77,13 +38,4 @@
             <block type="adpayment/settings_checkout" name="adpaymentsetting" template="adpayment/adpaymentsetting.phtml" />
         </reference>
     </checkout_onepage_index>
-
-    <checkout_onepage_review>
-        <reference name="root">
-            <reference name="checkout.onepage.review.info.items.after">
-                <block type="adpayment/settings_checkout" name="adpaymentsettingcheckout"
-                       template="adpayment/adpaymentsettingphtml.phtml" />
-            </reference>
-        </reference>
-    </checkout_onepage_review>
 </layout>
