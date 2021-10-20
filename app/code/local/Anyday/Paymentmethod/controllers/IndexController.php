@@ -87,6 +87,7 @@ class Anyday_Paymentmethod_IndexController extends Mage_Core_Controller_Front_Ac
                     $order->save();
                 }
                 $this->helperAnyday->addStatusAfterPayment($order);
+                $order->sendNewOrderEmail();
             }
             $this->destroySessionData();
         }
