@@ -34,6 +34,7 @@
             <core_block_abstract_to_html_after>
                 <observers>
                     <adpayment>
+                        <type>singleton</type>
                         <class>adpayment/observer</class>
                         <method>addPriceTag</method>
                     </adpayment>
