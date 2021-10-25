@@ -1,0 +1,15 @@
+<?php $_product = $this->getProduct(); ?>
+<?php if (Mage::helper('adpayment/config')->isEnableTracker()
+    && Mage::helper('adpayment/config')->isEnableTrackInList()): ?>
+    <div class="extra-info" style="<?php echo Mage::helper('adpayment/config')->getInlineCssCategory(); ?>">
+        <anyday-price-tag style="display: block;"
+                          total-price="<?php echo $_product->getMinimalPrice(); ?>"
+                          price-tag-token="<?php echo Mage::helper('adpayment/config')->getTagToken(); ?>"
+                          currency="<?php echo Mage::app()->getStore()->getCurrentCurrencyCode(); ?>"
+                          environment="production">
+            <?php if (Mage::helper('adpayment/config')->getEnableFullPriceIntoTag()): ?>
+                <?php echo $_product->getFinalPrice(); ?>
+            <?php endif; ?>
+        </anyday-price-tag>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,19 @@
+<script type="text/javascript">
+//<![CDATA[
+    var ordersMassactionSelectOptions = $$('select#sales_order_grid_massaction-select option');
+    var ordersMassactionSelectOptgroupOptions = [];
+    for (var i = 0, j = 0; i < ordersMassactionSelectOptions.length; i++) {
+        if (ordersMassactionSelectOptions[i].value.indexOf('anyday_') !== -1) {
+            ordersMassactionSelectOptgroupOptions[j] = ordersMassactionSelectOptions[i]; j++;
+            $('sales_order_grid_massaction-select').remove(i);
+        }
+    }
+    if (ordersMassactionSelectOptgroupOptions.length > 0) {
+        var ordersMassactionSelectOptgroup = new Element('optgroup', {class: 'custom-optgroup-class', label: "<?php echo Mage::helper('adpaymentmethod')->__('Anyday Massaction'); ?>"});
+        for (var i = 0; i < ordersMassactionSelectOptgroupOptions.length; i++) {
+            ordersMassactionSelectOptgroup.insert(ordersMassactionSelectOptgroupOptions[i])
+        }
+        $('sales_order_grid_massaction-select').insert(ordersMassactionSelectOptgroup);
+    }
+//]]>
+</script>

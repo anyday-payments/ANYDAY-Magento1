@@ -8,6 +8,13 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
      */
     private $helperAnyday;
 
+    /**
+     * Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController constructor.
+     *
+     * @param Zend_Controller_Request_Abstract $request
+     * @param Zend_Controller_Response_Abstract $response
+     * @param array $invokeArgs
+     */
     public function __construct(
         Zend_Controller_Request_Abstract $request,
         Zend_Controller_Response_Abstract $response,
@@ -20,6 +27,7 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
 
     /**
      * Save creditmemo and related order, invoice in one transaction
+     *
      * @param Mage_Sales_Model_Order_Creditmemo $creditmemo
      * @return Mage_Adminhtml_Sales_Order_CreditmemoController
      * @throws Mage_Core_Exception
@@ -34,7 +42,7 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
              * @var $oneTransaction Mage_Sales_Model_Order_Payment_Transaction
              */
             foreach ($listTransaction as $oneTransaction) {
-                if ($oneTransaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_AUTH) {
+                if ($oneTransaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER) {
                     $transactionId = $oneTransaction->getTxnId();
                     $result = $this->helperAnyday->refundTransaction(
                         $transactionId,
@@ -42,8 +50,8 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
                         $creditmemo->getOrder()->getStore()->getId()
                     );
                     if ($result == '') {
-                        Mage::throwException(Mage::helper('payment')->__('ANYDAY Error'));
-                        $this->_getSession()->addError('ANYDAY Error');
+                        Mage::throwException(Mage::helper('payment')->__('Anyday Error'));
+                        $this->_getSession()->addError('Anyday Error');
                     } else {
                         if (isset($result['errorMessage'])) {
                             $creditmemo->cancel();
@@ -65,5 +73,31 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
         $transactionSave->save();
 
         return $this;
+    }
+
+    /**
+     * Initialize requested invoice instance
+     * @param unknown_type $order
+     */
+    protected function _initInvoice($order)
+    {
+        /**
+         * @var Mage_Sales_Model_Order $order
+         */
+        $invoiceId = $this->getRequest()->getParam('invoice_id');
+        if ($invoiceId) {
+            $invoice = Mage::getModel('sales/order_invoice')
+                ->load($invoiceId)
+                ->setOrder($order);
+            if ($invoice->getId()) {
+                return $invoice;
+            }
+        } else {
+            $invoiceCollection = $order->getInvoiceCollection();
+            if (count($invoiceCollection) == 1) {
+                return $invoiceCollection->getFirstItem();
+            }
+        }
+        return false;
     }
 }

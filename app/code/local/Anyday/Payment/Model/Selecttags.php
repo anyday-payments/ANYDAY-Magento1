@@ -2,7 +2,7 @@
 class Anyday_Payment_Model_Selecttags
 {
     /**
-     * @return array[]
+     * @return array
      */
     public function toOptionArray()
     {

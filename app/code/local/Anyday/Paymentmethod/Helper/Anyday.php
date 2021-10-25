@@ -65,7 +65,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
             $storeId
         );
         if ($returnCancel == '') {
-            Mage::throwException($this->__('ANYDAY payment Error'));
+            Mage::throwException($this->__('Anyday payment Error'));
             $this->printOrderError($order,$this->__('Anyday empty result'));
         }
         if (isset($returnCancel['errorMessage'])) {
@@ -149,7 +149,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
             if ($status->getData('status') == Mage_Sales_Model_Order::STATE_COMPLETE &&
                 $status->getData('state') == Mage_Sales_Model_Order::STATE_COMPLETE){
                 $order->addStatusHistoryComment(
-                    $this->__('Create Order with ANYDAY Payment'),
+                    $this->__('Create Order with Anyday Payment'),
                     Mage_Sales_Model_Order::STATE_COMPLETE
                 );
             } else {
@@ -166,7 +166,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
     public function addStatusAfterInvoice(Mage_Sales_Model_Order $order)
     {
         $status = $this->helperSettings->getAfterInvoiceStatus($order->getStore()->getId());
-        if ($status) {
+        if ($this->verifyChangeStatus($order) && $status) {
             if ($status->getData('status') == Mage_Sales_Model_Order::STATE_COMPLETE &&
                 $status->getData('state') == Mage_Sales_Model_Order::STATE_COMPLETE){
                 $order->addStatusHistoryComment(
@@ -178,6 +178,20 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
             }
             $order->save();
         }
+    }
+
+    /**
+     * Validate Change status
+     *
+     * @param Mage_Sales_Model_Order $order
+     * @return bool
+     */
+    private function verifyChangeStatus(Mage_Sales_Model_Order $order)
+    {
+        if ($order->canInvoice()) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -236,7 +250,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
     public function isFirstInvoice(Mage_Sales_Model_Order $order)
     {
         if ($this->isPaymentAnyday($order->getPayment())) {
-            if (!$order->getInvoiceCollection()->count()) {
+            if (!$order->getInvoiceCollection()->getSize()) {
                 return true;
             }
             foreach ($order->getInvoiceCollection() as $oneInvoice) {

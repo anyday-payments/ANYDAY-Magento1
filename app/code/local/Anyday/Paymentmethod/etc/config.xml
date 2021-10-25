@@ -15,6 +15,15 @@
                 </args>
             </adpaymentmethodfront>
         </routers>
+        <translate>
+            <modules>
+                <Anyday_Paymentmethod>
+                    <files>
+                        <default>Anyday_Paymentmethod.csv</default>
+                    </files>
+                </Anyday_Paymentmethod>
+            </modules>
+        </translate>
     </frontend>
     <global>
         <resources>
@@ -23,20 +32,7 @@
                     <module>Anyday_Paymentmethod</module>
                     <class>Mage_Sales_Model_Resource_Setup</class>
                 </setup>
-                <connection>
-                    <use>core_setup</use>
-                </connection>
             </adpaymentmethod_setup>
-            <adpaymentmethod_write>
-                <connection>
-                    <use>core_write</use>
-                </connection>
-            </adpaymentmethod_write>
-            <adpaymentmethod_read>
-                <connection>
-                    <use>core_read</use>
-                </connection>
-            </adpaymentmethod_read>
         </resources>
         <helpers>
             <adpaymentmethod>
@@ -49,34 +45,21 @@
             </adpaymentmethod>
         </models>
         <blocks>
-            <sales>
-                <rewrite>
-                    <order_creditmemo_create_items>Anyday_Paymentmethod</order_creditmemo_create_items>
-                </rewrite>
-            </sales>
             <adpaymentmethod>
                 <class>Anyday_Paymentmethod_Block</class>
             </adpaymentmethod>
-            <adminhtml>
-                <rewrite>
-                    <sales_order_creditmemo_create_items>Anyday_Paymentmethod_Block_Adminhtml_Sales_Order_Creditmemo_Create_Items</sales_order_creditmemo_create_items>
-                </rewrite>
-            </adminhtml>
         </blocks>
-        <adpaymentmethod_resource>
-            <class>Mage_Cms_Model_Resource</class>
-        </adpaymentmethod_resource>
-<!--        <events>-->
-<!--            <checkout_type_onepage_save_order_after>-->
-<!--                <observers>-->
-<!--                    <ad_payment_checkout_type_onepage_save_order_after>-->
-<!--                        <type>singleton</type>-->
-<!--                        <class>adpaymentmethod/observer_ordersave</class>-->
-<!--                        <method>validate</method>-->
-<!--                    </ad_payment_checkout_type_onepage_save_order_after>-->
-<!--                </observers>-->
-<!--            </checkout_type_onepage_save_order_after>-->
-<!--        </events>-->
+        <events>
+            <sales_order_payment_place_start>
+                <observers>
+                    <ad_payment_sales_order_payment_place_start>
+                        <type>singleton</type>
+                        <class>adpaymentmethod/observer_order_place</class>
+                        <method>start</method>
+                    </ad_payment_sales_order_payment_place_start>
+                </observers>
+            </sales_order_payment_place_start>
+        </events>
     </global>
     <default>
         <payment>
@@ -84,7 +67,7 @@
                 <active>1</active>
                 <model>adpaymentmethod/paymentmethod</model>
                 <order_status>pending</order_status>
-                <title>ANYDAY Split</title>
+                <title>Anyday</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
             </adpaymentmethod>
@@ -99,13 +82,6 @@
                     </modules>
                 </args>
             </adminhtml>
-            <!--<adminhtml>
-                <args>
-                    <modules>
-                        <adpaymentmethod before='Mage_Adminhtml'>Anyday_Paymentmethod_Adminhtml</adpaymentmethod>
-                    </modules>
-                </args>
-            </adminhtml>-->
         </routers>
     </admin>
     <adminhtml>
@@ -116,6 +92,15 @@
                 </smartparser>
             </updates>
         </layout>
+        <translate>
+            <modules>
+                <Anyday_Paymentmethod>
+                    <files>
+                        <default>Anyday_Paymentmethod.csv</default>
+                    </files>
+                </Anyday_Paymentmethod>
+            </modules>
+        </translate>
         <events>
             <sales_order_payment_cancel>
                 <observers>
@@ -135,24 +120,30 @@
                     </Anyday_adminhtml_widget_container_html_before>
                 </observers>
             </adminhtml_widget_container_html_before>
-<!--            <adminhtml_sales_order_creditmemo_register_before>-->
-<!--                <observers>-->
-<!--                    <Anyday_adminhtml_sales_order_creditmemo_register_before>-->
-<!--                        <type>singleton</type>-->
-<!--                        <class>adpaymentmethod/observer</class>-->
-<!--                        <method>creditmemoRegister</method>-->
-<!--                    </Anyday_adminhtml_sales_order_creditmemo_register_before>-->
-<!--                </observers>-->
-<!--            </adminhtml_sales_order_creditmemo_register_before>-->
-            <!--<sales_order_invoice_save_after>
+            <core_block_abstract_prepare_layout_before>
                 <observers>
-                    <Anyday_sales_order_invoice_save_after>
-                        <type>singleton</type>
-                        <class>adpaymentmethod/observer</class>
-                        <method>captureInvoiceAnydaypayment</method>
-                    </Anyday_sales_order_invoice_save_after>
+                    <anyday_core_block_abstract_prepare_layout_before>
+                        <class>adpaymentmethod/observer_salesgrid</class>
+                        <method>addMassAction</method>
+                    </anyday_core_block_abstract_prepare_layout_before>
                 </observers>
-            </sales_order_invoice_save_after>-->
+            </core_block_abstract_prepare_layout_before>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <anyday_core_block_abstract_to_html_after>
+                        <class>adpaymentmethod/observer</class>
+                        <method>removeCapture</method>
+                    </anyday_core_block_abstract_to_html_after>
+                </observers>
+            </core_block_abstract_to_html_after>
+            <core_block_abstract_to_html_before>
+                <observers>
+                    <anyday_core_block_abstract_to_html_after>
+                        <class>adpaymentmethod/observer</class>
+                        <method>removeRefund</method>
+                    </anyday_core_block_abstract_to_html_after>
+                </observers>
+            </core_block_abstract_to_html_before>
         </events>
     </adminhtml>
 </config>

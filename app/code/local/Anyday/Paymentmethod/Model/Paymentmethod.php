@@ -40,54 +40,13 @@ class Anyday_Paymentmethod_Model_Paymentmethod extends Mage_Payment_Model_Method
     }
 
     /**
-     * @return $this|Anyday_Paymentmethod_Model_Paymentmethod|Mage_Payment_Model_Abstract
-     * @throws Mage_Core_Exception
+     * Validate payment method information object
+     *
+     * @return Anyday_Paymentmethod_Model_Paymentmethod
      */
     public function validate()
     {
         parent::validate();
-        //$this->sessionCheckout->setAdOptins('');
-        if ($this->isValidateQuote()) {
-            $grandTotal = (double)$this->getInfoInstance()->getQuote()->getGrandTotal();
-            $this->getInfoInstance()->getQuote()->reserveOrderId();
-            $this->getInfoInstance()->getQuote()->save();
-            $sendParam = [
-                'Amount' => $grandTotal,
-                'Currency' => 'DKK',
-                'OrderId' => (string)$this->getInfoInstance()->getQuote()->getData('reserved_order_id'),
-                'SuccessRedirectUrl' => Mage::getUrl('adpaymentmethodfront/index/success',
-                    array('quote'=>$this->getInfoInstance()->getQuote()->getId())
-                ),
-                'CancelPaymentRedirectUrl' => Mage::getUrl('adpaymentmethodfront/index/cancel',
-                    array('quote'=>$this->getInfoInstance()->getQuote()->getId())
-                ),
-            ];
-
-            $url = 'https://my.anyday.io/v1/payments';
-            $data_string = json_encode($sendParam);
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-            $authorization = "Authorization: Bearer " . Mage::helper('adpaymentmethod/settings')->getApiKey();
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json', $authorization]);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $result = json_decode($result);
-            if (isset($result->errorCode) && !$result->errorCode && isset($result->transactionId)) {
-                $this->sessionCheckout->setAdOptins([
-                    self::NAME_URL          => 'https://my.anyday.io' . $result->authorizeUrl,
-                    self::NAME_TRANSACTION  => $result->transactionId,
-                    self::NAME_QUOTE        => (int)$this->getInfoInstance()->getQuote()->getId(),
-                    self::NAME_AMOUNT       => (double)$this->getInfoInstance()->getQuote()->getGrandTotal()
-                ]);
-            } else {
-                $errorText = Mage::helper('payment')->__('ANYDAY payment Error.');
-                if (isset($result->errorMessage)) {
-                    $errorText = Mage::helper('payment')->__($result->errorMessage);
-                }
-                throw new Anyday_Paymentmethod_Exception($errorText);
-            }
-        }
 
         return $this;
     }
@@ -101,28 +60,56 @@ class Anyday_Paymentmethod_Model_Paymentmethod extends Mage_Payment_Model_Method
     }
 
     /**
-     * @return bool
+     * Set capture transaction ID to invoice for informational purposes
+     * @param Mage_Sales_Model_Order_Invoice $invoice
+     * @param Mage_Sales_Model_Order_Payment $payment
+     * @return Mage_Payment_Model_Method_Abstract
+     * @throws Exception
+     */
+    public function processInvoice($invoice, $payment)
+    {
+        $this->helperAnyday->addStatusAfterInvoice($invoice->getOrder());
+        return parent::processInvoice($invoice, $payment);
+    }
+
+    /**
+     * Capture payment abstract method
+     *
+     * @param Varien_Object $payment
+     * @param float $amount
+     *
+     * @return Mage_Payment_Model_Abstract
      * @throws Mage_Core_Exception
      */
-    private function isValidateQuote()
+    public function capture(Varien_Object $payment, $amount)
     {
-        if (is_object($this->getInfoInstance()->getQuote())) {
-            if ($adOptions = $this->sessionCheckout->getAdOptins()) {
-                $grandTotal = (double)$this->getInfoInstance()->getQuote()->getGrandTotal();
-                if (isset($adOptions[self::NAME_QUOTE]) &&
-                    $adOptions[self::NAME_QUOTE] == (int)$this->getInfoInstance()->getQuote()->getId() &&
-                        isset($adOptions[self::NAME_AMOUNT]) && $adOptions[self::NAME_AMOUNT] == $grandTotal) {
-                    return false;
-                } else {
-//                    $this->helperAnyday->cancelTransaction(
-//                        isset($adOptions[self::NAME_TRANSACTION]) ? $adOptions[self::NAME_TRANSACTION] : ''
-//                    );
-                    $this->sessionCheckout->setAdOptins('');
-                    return true;
-                }
+        $currentOrder = $payment->getOrder();
+        $currentOrder->setData(Anyday_Paymentmethod_Helper_Settings::NAME_ISONLINE_ORDER_FIELD, true);
+        $currentOrder->save();
+        /** @var $transactions Mage_Sales_Model_Resource_Order_Payment_Transaction_Collection */
+        $transactions = Mage::getResourceModel('sales/order_payment_transaction_collection');
+        $listTransaction = $transactions->addOrderIdFilter($currentOrder->getId())
+            ->addAttributeToSelect('*');
+        /**
+         * @var $oneTransaction Mage_Sales_Model_Order_Payment_Transaction
+         */
+        foreach ($listTransaction as $oneTransaction) {
+            if ($oneTransaction->getTxnType() == Mage_Sales_Model_Order_Payment_Transaction::TYPE_ORDER) {
+                $transactionId = $oneTransaction->getTxnId();
+                $this->helperAnyday->captureTransaction(
+                    $transactionId,
+                    (double)$amount,
+                    $currentOrder,
+                    $currentOrder->getStore()->getId()
+                );
+                Mage::register('anyday_transaction',[
+                        'transaction'   => $transactionId,
+                        'amount'        => (double)$amount
+                    ]
+                );
+                break;
             }
-            return true;
         }
-        return false;
+        return parent::capture($payment, $amount);
     }
 }

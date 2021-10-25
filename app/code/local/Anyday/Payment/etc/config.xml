@@ -30,29 +30,16 @@
                 </adpayment>
             </updates>
         </layout>
+        <events>
+            <core_block_abstract_to_html_after>
+                <observers>
+                    <adpayment>
+                        <type>singleton</type>
+                        <class>adpayment/observer</class>
+                        <method>addPriceTag</method>
+                    </adpayment>
+                </observers>
+            </core_block_abstract_to_html_after>
+        </events>
     </frontend>
-    <adminhtml>
-        <acl>
-            <resources>
-                <all>
-                    <title>Allow Everything</title>
-                </all>
-                <admin>
-                    <children>
-                        <system>
-                            <children>
-                                <config>
-                                    <children>
-                                        <adpayment_options>
-                                            <title>Custom Configuration Section</title>
-                                        </adpayment_options>
-                                    </children>
-                                </config>
-                            </children>
-                        </system>
-                    </children>
-                </admin>
-            </resources>
-        </acl>
-    </adminhtml>
 </config>

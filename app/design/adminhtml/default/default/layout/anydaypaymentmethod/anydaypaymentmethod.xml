@@ -5,22 +5,8 @@
             <action method="addItem"><type>skin_js</type><name>js/anydaypaymentmethod/anydaypaymentmethod.js</name><params/></action>
         </reference>
         <reference name="content">
-            <block type="adpaymentmethod/adminhtml_config" name="adpaymentmethodconfig"
+            <block type="adminhtml/template" name="adpaymentmethodconfig"
                    template="adpaymentmethod/adpaymentmethodconfig.phtml"/>
         </reference>
     </adminhtml_system_config_edit>
-
-    <adminhtml_sales_order_invoice_new>
-        <reference name="content">
-            <reference name="sales_invoice_create">
-                <reference name="form">
-                    <reference name="order_items">
-                        <action method="setTemplate">
-                            <template>adpaymentmethod/sales/order/invoice/create/items.phtml</template>
-                        </action>
-                    </reference>
-                </reference>
-            </reference>
-        </reference>
-    </adminhtml_sales_order_invoice_new>
 </layout>

@@ -2,13 +2,13 @@
 <config>
     <tabs>
         <adpayment translate="label" module="adpayment">
-            <label>ANYDAY Payment Extensions</label>
+            <label>Anyday Payment Extensions</label>
             <sort_order>1</sort_order>
         </adpayment>
     </tabs>
     <sections>
         <adpayment_options translate="label" module="adpayment">
-            <label>ANYDAY Pricetag Settings</label>
+            <label>Anyday Pricetag Settings</label>
             <tab>adpayment</tab>
             <frontend_type>text</frontend_type>
             <sort_order>1</sort_order>
