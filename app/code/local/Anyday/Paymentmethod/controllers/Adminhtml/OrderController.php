@@ -37,7 +37,7 @@ class Anyday_Paymentmethod_Adminhtml_OrderController extends Mage_Adminhtml_Cont
                             $currentOrder->getStore()->getId()
                         );
                         if ($result == '') {
-                            $this->_getSession()->addError('ANYDAY Error');
+                            $this->_getSession()->addError('Anyday Error');
                         } else {
                             if (isset($result['errorMessage'])) {
                                 $this->_getSession()->addError($this->__($result['errorMessage']));

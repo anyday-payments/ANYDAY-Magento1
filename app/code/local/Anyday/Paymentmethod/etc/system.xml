@@ -4,13 +4,13 @@
         <payment>
             <groups>
                 <adpaymentmethod translate="label" module="adpaymentmethod">
-                    <label>ANYDAY payment method</label>
+                    <label>Anyday payment method</label>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>0</show_in_store>
                     <comment>
-                        Your ANYDAY environment is set to Test Mode. Do not fulfill or ship any orders placed with ANYDAY! Change to Live Mode to begin accepting orders
+                        Your Anyday environment is set to Test Mode. Do not fulfill or ship any orders placed with Anyday! Change to Live Mode to begin accepting orders
                     </comment>
                     <fields>
                         <email translate="label">

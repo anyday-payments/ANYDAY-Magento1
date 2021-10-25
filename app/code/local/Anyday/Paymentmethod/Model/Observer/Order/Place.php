@@ -56,7 +56,7 @@ class Anyday_Paymentmethod_Model_Observer_Order_Place
                     Anyday_Paymentmethod_Model_Paymentmethod::NAME_AMOUNT       => $grandTotal
                 ]);
             } else {
-                $errorText = Mage::helper('payment')->__('ANYDAY payment Error.');
+                $errorText = Mage::helper('payment')->__('Anyday payment Error.');
                 if (isset($result->errorMessage)) {
                     $errorText = Mage::helper('payment')->__($result->errorMessage);
                 }

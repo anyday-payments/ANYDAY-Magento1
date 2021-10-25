@@ -65,7 +65,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
             $storeId
         );
         if ($returnCancel == '') {
-            Mage::throwException($this->__('ANYDAY payment Error'));
+            Mage::throwException($this->__('Anyday payment Error'));
             $this->printOrderError($order,$this->__('Anyday empty result'));
         }
         if (isset($returnCancel['errorMessage'])) {
@@ -149,7 +149,7 @@ class Anyday_Paymentmethod_Helper_Anyday extends Mage_Core_Helper_Abstract
             if ($status->getData('status') == Mage_Sales_Model_Order::STATE_COMPLETE &&
                 $status->getData('state') == Mage_Sales_Model_Order::STATE_COMPLETE){
                 $order->addStatusHistoryComment(
-                    $this->__('Create Order with ANYDAY Payment'),
+                    $this->__('Create Order with Anyday Payment'),
                     Mage_Sales_Model_Order::STATE_COMPLETE
                 );
             } else {
