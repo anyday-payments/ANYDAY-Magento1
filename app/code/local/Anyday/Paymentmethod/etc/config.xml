@@ -67,7 +67,7 @@
                 <active>1</active>
                 <model>adpaymentmethod/paymentmethod</model>
                 <order_status>pending</order_status>
-                <title>ANYDAY Split</title>
+                <title>Anyday</title>
                 <allowspecific>0</allowspecific>
                 <payment_action>sale</payment_action>
             </adpaymentmethod>

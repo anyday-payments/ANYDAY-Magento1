@@ -50,8 +50,8 @@ class Anyday_Paymentmethod_Adminhtml_Sales_Order_CreditmemoController extends Ma
                         $creditmemo->getOrder()->getStore()->getId()
                     );
                     if ($result == '') {
-                        Mage::throwException(Mage::helper('payment')->__('ANYDAY Error'));
-                        $this->_getSession()->addError('ANYDAY Error');
+                        Mage::throwException(Mage::helper('payment')->__('Anyday Error'));
+                        $this->_getSession()->addError('Anyday Error');
                     } else {
                         if (isset($result['errorMessage'])) {
                             $creditmemo->cancel();
